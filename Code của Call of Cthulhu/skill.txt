@@ -1,0 +1,95 @@
+embed
+{{coc=load_json(get('coc','{"STR": 0, "DEX": 0, "POW": 0, "CON": 0, "APP": 0, "EDU": 0, "SIZ": 0, "INT": 0, "LUCK": 0, "SAN": 0, "MP": 0, "MOVE": 0, "JOB": "None"}'))}}
+{{cocskill=load_json(get('cocskill','{"Accounting": 5, "Anthropology": 1, "Appraise": 5, "Archaeology": 1, "Art/Craft": 5, "Charm": 15, "Climb": 20, "Credit Rating": 9, "Cthulhu Mythos": 0, "Disguise": 5, "Dodge": 0, "Drive Auto": 20, "Electrical Repair": 10, "Fast Talk": 5, "Fighting": 25, "Fighting Brawl": 25, "Firearms": 25, "Firearms Handgun": 20, "Rifle/Shotgun": 25, "First Aid": 30, "History": 5, "Intimidate": 15, "Jump": 20, "Language Other": 1, "Language Own": 0, "Law": 5, "Library Use": 20, "Listen": 20, "Locksmith": 1, "Mechanical Repair": 10, "Medicine": 1, "Natural World": 10, "Navigate": 10, "Occult": 5, "Operate Hvy. Machinery": 1, "Persuade": 10, "Pilot": 1, "Psychology": 10, "Psychoanalysis": 1, "Ride": 5, "Science": 1, "Sleight of Hand": 10, "Spot Hidden": 25, "Stealth": 20, "Survival": 10, "Swim": 20, "Throw": 20, "Track": 10, "Misc/Additional Skills": 1}'))}}
+{{check = vroll("1d100")}}
+<drac2>
+args = [x.upper() for x in &ARGS&]
+try:
+    if args[0].isdigit():
+        if len(args) == 1:
+            skill = 'skill'
+        else:
+            skill = " ".join(&ARGS&[1:])
+        full = int(args[0])
+    else:
+        # Tạo một bản đồ của các kỹ năng và mã tương ứng
+        skill_map = {
+            "SPOT": "Spot Hidden",
+            "DOD": "Dodge",
+            "STE": "Stealth",
+            "LIS": "Listen",
+            "ACC": "Accounting",
+            "ANT": "Anthropology",
+            "APP": "Appraise",
+            "ARC": "Archaeology",
+            "ART": "Art/Craft",
+            "CHA": "Charm",
+            "CLI": "Climb",
+            "CRT": "Credit Rating",
+            "CTH": "Cthulhu Mythos",
+            "DIS": "Disguise",
+            "DRI": "Drive Auto",
+            "ELE": "Electrical Repair",
+            "FAS": "Fast Talk",
+            "FIG": "Fighting",
+            "FIB": "Fighting Brawl",
+            "FIR": "Firearms",
+            "FIH": "Firearms Handgun",
+            "RIF": "Rifle/Shotgun",
+            "FIRST": "First Aid",
+            "HIS": "History",
+            "INT": "Intimidate",
+            "JUM": "Jump",
+            "LAN": "Language Other",
+            "LANO": "Language Own",
+            "LAW": "Law",
+            "LIB": "Library Use",
+            "LOC": "Locksmith",
+            "MECH": "Mechanical Repair",
+            "MED": "Medicine",
+            "NAT": "Natural World",
+            "NAV": "Navigate",
+            "OCC": "Occult",
+            "OPH": "Operate Hvy. Machinery",
+            "PER": "Persuade",
+            "PIL": "Pilot",
+            "PSY": "Psychology",
+            "PSYCH": "Psychoanalysis",
+            "RIDE": "Ride",
+            "SCI": "Science",
+            "SLE": "Sleight of Hand",
+            "SUR": "Survival",
+            "SWI": "Swim",
+            "THR": "Throw",
+            "TRA": "Track",
+            "MISC": "Misc/Additional Skills"
+        }
+        skill = skill_map.get(args[0],None)
+        if skill:
+            full = int(cocskill.get(skill))
+        elif args[0] in coc:
+            skill = f'{args[0]}'
+            full = int(coc.get(args[0]))
+        else:
+            for x in coc:
+                if args[0] in x.upper():
+                    skill = f'{x}' 
+                    full = int(coc.get(x))
+            for y in cocskill:
+                if args[0] in y.upper():
+                    skill = f'{y}' 
+                    full = int(cocskill.get(y))
+    hard = floor(full/2)
+    extreme = floor(full/4)
+    title = f"{name} make a {skill} check!"
+    desc = f"**Full:** {full} / **Hard:** {hard} / **Extreme:** {extreme}"
+    f = f"**Roll:** {check}"
+except:
+    title = f"Không tìm thấy kết quả!"
+    desc = f""
+    f = f"Bấm ``!cochelp`` để xem hướng dẫn sử dụng"
+</drac2>
+-title "{{f"{title}"}}"
+{{"" if image=="" else "-thumb "+image}} -color 235407
+-desc "{{desc}}"
+-f "{{f}}"

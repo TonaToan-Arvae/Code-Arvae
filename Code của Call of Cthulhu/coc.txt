@@ -1,0 +1,57 @@
+embed
+{{coc=load_json(get('coc','{"STR": 0, "DEX": 0, "POW": 0, "CON": 0, "APP": 0, "EDU": 0, "SIZ": 0, "INT": 0, "LUCK": 0, "SAN": 0, "MP": 0, "MOVE": 0, "JOB": "None"}'))}}
+{{cocskill=load_json(get('cocskill','{"Accounting": 5, "Anthropology": 1, "Appraise": 5, "Archaeology": 1, "Art/Craft": 5, "Charm": 15, "Climb": 20, "Credit Rating": 9, "Cthulhu Mythos": 0, "Disguise": 5, "Dodge": 0, "Drive Auto": 20, "Electrical Repair": 10, "Fast Talk": 5, "Fighting": 25, "Fighting Brawl": 25, "Firearms": 25, "Firearms Handgun": 20, "Rifle/Shotgun": 25, "First Aid": 30, "History": 5, "Intimidate": 15, "Jump": 20, "Language Other": 1, "Language Own": 0, "Law": 5, "Library Use": 20, "Listen": 20, "Locksmith": 1, "Mechanical Repair": 10, "Medicine": 1, "Natural World": 10, "Navigate": 10, "Occult": 5, "Operate Hvy. Machinery": 1, "Persuade": 10, "Pilot": 1, "Psychology": 10, "Psychoanalysis": 1, "Ride": 5, "Science": 1, "Sleight of Hand": 10, "Spot Hidden": 25, "Stealth": 20, "Survival": 10, "Swim": 20, "Throw": 20, "Track": 10, "Misc/Additional Skills": 1}'))}}
+<drac2>
+arg = [x.upper() for x in &ARGS&]
+if len(arg) == 2 and (arg[0] == 'STR' or arg[0] == 'DEX' or arg[0] == 'POW' or arg[0] == 'CON' or arg[0] == 'APP' or arg[0] == 'EDU' or arg[0] == 'SIZ' or arg[0] == 'INT' or arg[0] == 'LUCK' or arg[0] == 'SAN' or arg[0] == 'MP' or arg[0] == 'MOVE'):
+    coc[arg[0]] = arg[1]
+elif len(arg) == 2 and arg[0] == "JOB":
+    args = &ARGS&
+    coc[arg[0]] = args[1]
+elif len(arg) == 2 and arg[0] != 'DELETE':
+    args = &ARGS&
+    cocskill[args[0]] = args[1]
+elif len(arg) == 2 and arg[0] == 'DELETE':
+    args = &ARGS&
+    skill_to_delete = args[1]
+    cocskill = {key: value for key, value in cocskill.items() if key != skill_to_delete}
+cocskill["Dodge"] = floor(int(coc.get("DEX"))/2)
+cocskill["Language Own"] = coc.get("EDU")
+line = []
+skills = list(cocskill.items())
+for i in range(0, len(skills), 4):
+    chunk = skills[i:i+4]
+    line.append(' '.join([f'**{key}:** {value}' for key, value in chunk]))
+
+output = '\n'.join(line)
+</drac2>
+{{JOB = coc.get("JOB")}}
+{{HP= character().hp}}
+{{LUCK = coc.get("LUCK")}}
+{{SAN = coc.get("SAN")}}
+{{MP = coc.get("MP")}}
+{{MOVE = coc.get("MOVE")}}
+{{STR = coc.get("STR")}}
+{{DEX = coc.get("DEX")}}
+{{INT = coc.get("INT")}}
+{{CON = coc.get("CON")}}
+{{APP = coc.get("APP")}}
+{{POW = coc.get("POW")}}
+{{SIZ = coc.get("SIZ")}}
+{{EDU = coc.get("EDU")}}
+-title "{{f"Hồ sơ của {name}"}}"
+{{"" if image=="" else "-thumb "+image}} -color 235407
+-desc "Occupation: {{JOB}}
+**HP:** {{HP}}/{{hp}}
+**LUCK:** {{LUCK}}
+**SAN:** {{SAN}}
+**MP:** {{MP}}
+**Move rate:** {{MOVE}}
+**STR:** {{STR}} **DEX:** {{DEX}} **INT:** {{INT}}
+**CON:** {{CON}} **APP:** {{APP}} **POW:** {{POW}}
+**SIZ:** {{SIZ}} **EDU:** {{EDU}}"
+-f "**Investigator skills** | 
+{{output}}"
+-footer "!cochelp để xem toàn bộ hướng dẫn sử dụng lệnh"
+{{character().set_cvar('coc',dump_json(coc))}}
+{{character().set_cvar('cocskill',dump_json(cocskill))}}
