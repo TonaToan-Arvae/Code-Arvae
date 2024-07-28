@@ -1,0 +1,21 @@
+embed
+-title "Rolling stats for Call of Cthulhu"
+<drac2>
+StatList = [("STR",  1),
+            ("CON",  1),
+            ("SIZ",  0),
+            ("DEX",  1),
+            ("APP",  1),
+            ("INT",  0),
+            ("POW",  1),
+            ("EDU",  0),
+            ("LUCK", 1)]
+DiceList = ["(2d6+6)*5", "3d6*5"]
+out = []
+
+
+for stat, dice in StatList:
+  out.append(f""" -f "{stat}|{vroll(DiceList[dice])}|inline" """)
+
+return ' '.join(out)
+</drac2>
