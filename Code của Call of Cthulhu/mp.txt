@@ -21,4 +21,3 @@ elif len(args) == 2 and args[0] == '-':
 {{character().set_cvar('coc',dump_json(coc))}}
 -title "{{f"MP của {name}"}}"
 {{"" if image=="" else "-thumb "+image}} -color 235407
--desc "{{output}}"

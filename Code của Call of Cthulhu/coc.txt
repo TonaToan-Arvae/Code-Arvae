@@ -54,4 +54,3 @@ output = '\n'.join(line)
 {{output}}"
 -footer "!cochelp để xem toàn bộ hướng dẫn sử dụng lệnh"
 {{character().set_cvar('coc',dump_json(coc))}}
-{{character().set_cvar('cocskill',dump_json(cocskill))}}
